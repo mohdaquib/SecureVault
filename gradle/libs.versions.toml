@@ -12,6 +12,9 @@ appcompat = "1.6.1"
 material = "1.10.0"
 jetbrainsKotlinJvm = "2.0.21"
 hilt = "2.51"
+room = "2.8.4"
+sqlCipher = "4.12.0"
+sqlite = "2.6.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +35,10 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+sql-cipher = { group = "net.zetetic", name = "sqlcipher-android", version.ref = "sqlCipher" }
+sqlite = { group = "androidx.sqlite", name = "sqlite", version.ref = "sqlite" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

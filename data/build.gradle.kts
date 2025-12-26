@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -35,10 +36,12 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(project(":domain"))
+    implementation(project(":core-crypto"))
+
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+
+    implementation(libs.sql.cipher)
+    implementation(libs.sqlite)
 }
