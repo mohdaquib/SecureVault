@@ -37,4 +37,7 @@ android {
 dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.okhttp)
+
+    implementation(libs.retrofit)
+    implementation(libs.retrfoit.converter.scalars)
 }
