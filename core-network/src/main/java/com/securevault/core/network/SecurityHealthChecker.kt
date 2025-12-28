@@ -5,7 +5,10 @@ class SecurityHealthChecker(
 ) {
     suspend fun check(): NetworkResult<Unit> =
         safeNetworkCall {
-            api.healthCheck()
+            val response = api.healthCheck()
+            if (!response.isSuccessful) {
+                throw IllegalStateException("Health check failed: ${response.code()}")
+            }
             Unit
         }
 }

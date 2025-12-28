@@ -8,6 +8,7 @@ class OkHttpProvider {
         OkHttpClient
             .Builder()
             .certificatePinner(CertificatePinning.certificatePinner)
+            .addInterceptor(UserAgentInterceptor())
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .build()

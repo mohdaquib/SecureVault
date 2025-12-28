@@ -8,7 +8,6 @@ object CertificatePinning {
     val certificatePinner: CertificatePinner =
         CertificatePinner
             .Builder()
-            .add(HOST, "sha256/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=")
-            .add(HOST, "sha256/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=")
+            .add(HOST, "sha256/1EkvzibgiE3k+xdsv+7UU5vhV8kdFCQiUiFdMX5Guuk=")
             .build()
 }
