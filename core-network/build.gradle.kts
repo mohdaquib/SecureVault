@@ -40,4 +40,9 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.retrfoit.converter.scalars)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.okhttp.tls)
+    testImplementation(libs.okhttp.mock.web.server)
+    testImplementation(libs.robolectric)
 }
