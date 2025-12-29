@@ -1,10 +1,9 @@
-package com.securevault.ui.theme
+package com.securevault.ui
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.securevault.ui.SecurityStatus
 
 @Composable
 fun SecurityBanner(status: SecurityStatus) {

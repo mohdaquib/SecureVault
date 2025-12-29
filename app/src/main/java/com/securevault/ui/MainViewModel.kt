@@ -6,12 +6,15 @@ import com.securevault.core.network.NetworkResult
 import com.securevault.core.network.SecurityHealthChecker
 import com.securevault.domain.usecase.CreateNoteUseCase
 import com.securevault.domain.usecase.GetNotesUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val getNotesUseCase: GetNotesUseCase,
     private val createNoteUseCase: CreateNoteUseCase,
     private val securityHealthChecker: SecurityHealthChecker

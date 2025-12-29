@@ -4,12 +4,12 @@ import com.securevault.domain.model.Note
 import com.securevault.domain.repository.NotesRepository
 import java.time.Instant
 
-class CreateNoteUseCase(private val notesRepository: NotesRepository) {
+class CreateNoteUseCase(private val repository: NotesRepository) {
     suspend operator fun invoke(title: String, content: String) {
         require(title.isNotBlank()) { "Title cannot be blank" }
         val now = Instant.now()
         val note = Note(title = title.trim(),
             content = content, createdAt = now, updatedAt = now)
-        notesRepository.createNote(note)
+        repository.createNote(note)
     }
 }

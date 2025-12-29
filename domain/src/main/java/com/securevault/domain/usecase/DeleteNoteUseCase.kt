@@ -2,8 +2,8 @@ package com.securevault.domain.usecase
 
 import com.securevault.domain.repository.NotesRepository
 
-class DeleteNoteUseCase(private val notesRepository: NotesRepository) {
+class DeleteNoteUseCase(private val repository: NotesRepository) {
     suspend operator fun invoke(noteId: String) {
-        notesRepository.deleteNote(noteId = noteId)
+        repository.deleteNote(noteId = noteId)
     }
 }

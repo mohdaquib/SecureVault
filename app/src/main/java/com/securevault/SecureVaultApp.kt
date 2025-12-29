@@ -1,8 +1,10 @@
 package com.securevault
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
-class MyApp : Application() {
+@HiltAndroidApp
+class SecureVaultApp : Application() {
     override fun onCreate() {
         super.onCreate()
         System.loadLibrary("sqlcipher")
