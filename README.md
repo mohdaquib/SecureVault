@@ -42,33 +42,6 @@ It focuses on **doing security correctly** — not just enabling features, but *
 
 ---
 
-## 🧱 Architecture
-
-# SecureVault 🔐
-
-SecureVault is a sample Android app showcasing **production-grade mobile security practices**.
-
-It focuses on **doing security correctly** — not just enabling features, but **proving** they work.
-
----
-
-## ✨ Features
-
-- 🔒 Encrypted local database (Room + SQLCipher)
-- 🗝️ Keystore-backed secret protection
-- 🌐 SSL certificate pinning (OkHttp)
-- ✅ Deterministic security tests
-- 🧪 Instrumentation test proving encryption at rest
-- ⚙️ Hilt dependency injection
-- 🚀 GitHub Actions CI
-
----
-
-## 🧱 Architecture
-![App Architecture](images/app_architecture.png)
-
----
-
 ## 🔐 Security Highlights
 
 ### Encrypted Storage
