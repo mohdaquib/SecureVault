@@ -19,6 +19,8 @@ It focuses on **doing security correctly** — not just enabling features, but *
 ---
 
 ## 🧱 Architecture
+![App Architecture](https://github.com/mohdaquib/SecureVault/blob/main/images/app_architecture.png)
+
 
 # SecureVault 🔐
 
