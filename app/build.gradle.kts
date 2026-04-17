@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.biometric)
+    implementation(libs.biometric.compose)
     kapt(libs.hilt.compiler)
     kapt(libs.kotlin.metadata.jvm)
 

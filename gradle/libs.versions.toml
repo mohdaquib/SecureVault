@@ -22,6 +22,7 @@ androidxTestRunner = "1.6.2"
 robolectric = "4.12.1"
 hilt = "2.57.2"
 hiltNavigationCompose = "1.2.0"
+biometricCompose = "1.4.0-alpha06"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -58,6 +59,8 @@ robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometricCompose" }
+biometric-compose = { group = "androidx.biometric", name = "biometric-compose", version.ref = "biometricCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
