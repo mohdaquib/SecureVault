@@ -72,10 +72,10 @@ dependencies {
     kapt(libs.hilt.compiler)
     kapt(libs.kotlin.metadata.jvm)
 
-    implementation(project(":domain"))
-    implementation(project(":data"))
-    implementation(project(":core-network"))
-    implementation(project(":core-crypto"))
+    implementation(project(":demo-domain"))
+    implementation(project(":demo-data"))
+    implementation(project(":securevault-network"))
+    implementation(project(":securevault-crypto"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -21,7 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "SecureVault"
 include(":app")
-include(":data")
-include(":domain")
-include(":core-network")
-include(":core-crypto")
+include(":demo-data")
+include(":demo-domain")
+include(":securevault-network")
+include(":securevault-crypto")

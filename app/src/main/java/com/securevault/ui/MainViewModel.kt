@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.securevault.core.network.NetworkResult
 import com.securevault.core.network.SecurityHealthChecker
-import com.securevault.domain.usecase.CreateNoteUseCase
-import com.securevault.domain.usecase.GetNotesUseCase
+import com.securevault.demo.domain.usecase.CreateNoteUseCase
+import com.securevault.demo.domain.usecase.GetNotesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
