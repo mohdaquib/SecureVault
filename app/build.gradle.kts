@@ -74,7 +74,7 @@ dependencies {
 
     implementation(project(":domain"))
     implementation(project(":data"))
-    implementation(project(":core-network"))
+    implementation(project(":securevault-network"))
     implementation(project(":securevault-crypto"))
 
     testImplementation(libs.junit)
