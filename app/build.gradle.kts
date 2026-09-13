@@ -72,8 +72,8 @@ dependencies {
     kapt(libs.hilt.compiler)
     kapt(libs.kotlin.metadata.jvm)
 
-    implementation(project(":domain"))
-    implementation(project(":data"))
+    implementation(project(":demo-domain"))
+    implementation(project(":demo-data"))
     implementation(project(":securevault-network"))
     implementation(project(":securevault-crypto"))
 

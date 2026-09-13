@@ -1,6 +1,6 @@
 package com.securevault.ui
 
-import com.securevault.domain.model.Note
+import com.securevault.demo.domain.model.Note
 
 data class MainUiState(
     val notes: List<Note> = emptyList(),

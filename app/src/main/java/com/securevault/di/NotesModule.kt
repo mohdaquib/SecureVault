@@ -1,11 +1,11 @@
 package com.securevault.di
 
-import com.securevault.data.local.NoteDao
-import com.securevault.data.repository.NotesRepositoryImpl
-import com.securevault.domain.repository.NotesRepository
-import com.securevault.domain.usecase.CreateNoteUseCase
-import com.securevault.domain.usecase.DeleteNoteUseCase
-import com.securevault.domain.usecase.GetNotesUseCase
+import com.securevault.demo.data.local.NoteDao
+import com.securevault.demo.data.repository.NotesRepositoryImpl
+import com.securevault.demo.domain.repository.NotesRepository
+import com.securevault.demo.domain.usecase.CreateNoteUseCase
+import com.securevault.demo.domain.usecase.DeleteNoteUseCase
+import com.securevault.demo.domain.usecase.GetNotesUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

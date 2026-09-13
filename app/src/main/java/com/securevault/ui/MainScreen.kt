@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.securevault.domain.model.Note
+import com.securevault.demo.domain.model.Note
 import java.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)

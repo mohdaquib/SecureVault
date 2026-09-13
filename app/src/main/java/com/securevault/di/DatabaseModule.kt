@@ -2,8 +2,8 @@ package com.securevault.di
 
 import android.content.Context
 import com.securevault.core.crypto.SecurePassphraseStore
-import com.securevault.data.local.NoteDao
-import com.securevault.data.local.SecureDatabase
+import com.securevault.demo.data.local.NoteDao
+import com.securevault.demo.data.local.SecureDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
