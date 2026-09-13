@@ -75,7 +75,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":core-network"))
-    implementation(project(":core-crypto"))
+    implementation(project(":securevault-crypto"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

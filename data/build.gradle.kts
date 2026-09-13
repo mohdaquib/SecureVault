@@ -47,7 +47,7 @@ android {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":core-crypto"))
+    implementation(project(":securevault-crypto"))
 
     api(libs.room.runtime)
     kapt(libs.room.compiler)
