@@ -12,5 +12,5 @@ plugins {
 
 apiValidation {
     // These modules belong to the demo application, not the customer SDK.
-    ignoredProjects.addAll(listOf("app", "data", "domain", "core-network", "core-crypto"))
+    ignoredProjects.addAll(listOf("app", "demo-data", "demo-domain", "securevault-network", "securevault-crypto"))
 }
