@@ -3,7 +3,7 @@ package com.securevault.data.local
 import androidx.room.TypeConverter
 import java.time.Instant
 
-class InstantConverters {
+internal class InstantConverters {
     @TypeConverter
     fun fromInstant(instant: Instant?): Long? = instant?.toEpochMilli()
 

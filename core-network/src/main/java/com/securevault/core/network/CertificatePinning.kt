@@ -2,7 +2,7 @@ package com.securevault.core.network
 
 import okhttp3.CertificatePinner
 
-object CertificatePinning {
+internal object CertificatePinning {
     private const val HOST = "api.github.com"
 
     val certificatePinner: CertificatePinner =

@@ -62,3 +62,7 @@ It focuses on **doing security correctly** — not just enabling features, but *
 ```bash
 ./gradlew test
 ./gradlew connectedDebugAndroidTest
+
+## SDK API boundary
+
+See [API.md](API.md) for supported public types, demo-only boundaries, and the API dump review workflow.

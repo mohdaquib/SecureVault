@@ -1,7 +1,8 @@
 package com.securevault.di
 
-import com.securevault.data.local.NoteDao
-import com.securevault.data.repository.NotesRepositoryImpl
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import com.securevault.data.SecureVaultDataFactory
 import com.securevault.domain.repository.NotesRepository
 import com.securevault.domain.usecase.CreateNoteUseCase
 import com.securevault.domain.usecase.DeleteNoteUseCase
@@ -14,10 +15,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object NotesModule {
+internal object NotesModule {
     @Provides
     @Singleton
-    fun provideNotesRepository(noteDao: NoteDao): NotesRepository = NotesRepositoryImpl(noteDao = noteDao)
+    fun provideNotesRepository(@ApplicationContext context: Context): NotesRepository =
+        SecureVaultDataFactory.createNotesRepository(context)
 
     @Provides
     fun provideGetNotesUseCase(repo: NotesRepository) = GetNotesUseCase(repository = repo)

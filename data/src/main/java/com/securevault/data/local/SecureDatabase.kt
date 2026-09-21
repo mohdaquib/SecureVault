@@ -14,7 +14,7 @@ import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
     exportSchema = false,
 )
 @TypeConverters(InstantConverters::class)
-abstract class SecureDatabase : RoomDatabase() {
+internal abstract class SecureDatabase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
 
     companion object {

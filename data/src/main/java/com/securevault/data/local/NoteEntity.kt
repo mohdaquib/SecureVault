@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.time.Instant
 
 @Entity(tableName = "notes")
-data class NoteEntity(
+internal data class NoteEntity(
     @PrimaryKey val id: String,
     val title: String,
     val content: String,

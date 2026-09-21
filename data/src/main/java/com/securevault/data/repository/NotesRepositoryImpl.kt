@@ -8,7 +8,7 @@ import com.securevault.domain.repository.NotesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class NotesRepositoryImpl(private val noteDao: NoteDao) : NotesRepository {
+internal class NotesRepositoryImpl(private val noteDao: NoteDao) : NotesRepository {
     override fun observeNotes(): Flow<List<Note>> =
         noteDao.observeNotes().map { entities ->  entities.map { it.toDomain() }}
 
