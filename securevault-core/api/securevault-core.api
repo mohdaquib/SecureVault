@@ -1,0 +1,62 @@
+public final class com/securevault/sdk/InvalidSecureVaultConfigurationException : com/securevault/sdk/SecureVaultException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getField ()Ljava/lang/String;
+	public final fun getReason ()Ljava/lang/String;
+}
+
+public final class com/securevault/sdk/SecureVault {
+	public static final field Companion Lcom/securevault/sdk/SecureVault$Companion;
+	public static final field SDK_VERSION Ljava/lang/String;
+	public synthetic fun <init> (Landroid/content/Context;Lcom/securevault/sdk/SecureVaultConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun create (Landroid/content/Context;Lcom/securevault/sdk/SecureVaultConfig;)Lcom/securevault/sdk/SecureVault;
+	public final fun getCapabilities ()Ljava/util/Set;
+	public final fun getConfig ()Lcom/securevault/sdk/SecureVaultConfig;
+	public final fun getNamespace ()Ljava/lang/String;
+	public final fun getSdkVersion ()Ljava/lang/String;
+}
+
+public final class com/securevault/sdk/SecureVault$Companion {
+	public final fun create (Landroid/content/Context;Lcom/securevault/sdk/SecureVaultConfig;)Lcom/securevault/sdk/SecureVault;
+}
+
+public final class com/securevault/sdk/SecureVaultCapability : java/lang/Enum {
+	public static final field AUDIT_EVIDENCE Lcom/securevault/sdk/SecureVaultCapability;
+	public static final field ENCRYPTED_STORAGE Lcom/securevault/sdk/SecureVaultCapability;
+	public static final field KEY_MANAGEMENT Lcom/securevault/sdk/SecureVaultCapability;
+	public static final field NETWORK_SECURITY Lcom/securevault/sdk/SecureVaultCapability;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getId ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lcom/securevault/sdk/SecureVaultCapability;
+	public static fun values ()[Lcom/securevault/sdk/SecureVaultCapability;
+}
+
+public final class com/securevault/sdk/SecureVaultCapabilityUnavailableException : com/securevault/sdk/SecureVaultException {
+	public fun <init> (Lcom/securevault/sdk/SecureVaultCapability;)V
+	public final fun getCapability ()Lcom/securevault/sdk/SecureVaultCapability;
+}
+
+public final class com/securevault/sdk/SecureVaultConfig {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/securevault/sdk/SecureVaultConfig;
+	public static synthetic fun copy$default (Lcom/securevault/sdk/SecureVaultConfig;Ljava/lang/String;ILjava/lang/Object;)Lcom/securevault/sdk/SecureVaultConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getNamespace ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public class com/securevault/sdk/SecureVaultException : java/lang/RuntimeException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class com/securevault/sdk/SecureVaultInitializationException : com/securevault/sdk/SecureVaultException {
+	public fun <init> (Ljava/lang/Throwable;)V
+}
+
+public final class com/securevault/sdk/SecureVaultVersion {
+	public static final field CURRENT Ljava/lang/String;
+	public static final field INSTANCE Lcom/securevault/sdk/SecureVaultVersion;
+}
+

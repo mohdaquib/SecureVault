@@ -1,6 +1,6 @@
 package com.securevault.core.network
 
-suspend inline fun <T> safeNetworkCall(
+internal suspend inline fun <T> safeNetworkCall(
     crossinline block: suspend () -> T
 ) : NetworkResult<T> {
     return try {

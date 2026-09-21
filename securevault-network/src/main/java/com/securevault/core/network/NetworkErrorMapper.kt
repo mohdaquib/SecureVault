@@ -3,7 +3,7 @@ package com.securevault.core.network
 import okio.IOException
 import javax.net.ssl.SSLPeerUnverifiedException
 
-object NetworkErrorMapper {
+internal object NetworkErrorMapper {
     fun map(throwable: Throwable): NetworkError =
         when (throwable) {
             is SSLPeerUnverifiedException -> NetworkError.PinningFailure
