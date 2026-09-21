@@ -2,7 +2,7 @@ package com.securevault.core.network
 
 import retrofit2.Retrofit
 
-class RetrofitProvider(
+internal class RetrofitProvider(
     private val okHttpProvider: OkHttpProvider,
 ) {
     fun createHealthApi(): HealthApi =

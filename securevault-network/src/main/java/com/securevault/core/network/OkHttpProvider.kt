@@ -3,7 +3,7 @@ package com.securevault.core.network
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
-class OkHttpProvider {
+internal class OkHttpProvider {
     fun createPinnedClient(): OkHttpClient =
         OkHttpClient
             .Builder()

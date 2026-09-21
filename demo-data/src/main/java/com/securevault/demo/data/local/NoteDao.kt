@@ -8,7 +8,7 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface NoteDao {
+internal interface NoteDao {
     @Query("SELECT * FROM notes ORDER BY updatedAt DESC")
     fun observeNotes(): Flow<List<NoteEntity>>
 
