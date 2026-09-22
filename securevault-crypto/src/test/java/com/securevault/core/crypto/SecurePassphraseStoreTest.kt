@@ -19,17 +19,44 @@ class SecurePassphraseStoreTest {
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private fun key() = KeyGenerator.getInstance("AES").apply { init(256) }.generateKey()
 
+    @Test fun passphraseIsGeneratedOnlyOnFirstOpen() {
+        val config = VaultStorageConfig("generation-once")
+        val secretKey = key()
+        val source = RecordingSecureRandom()
+        val generator = SecretGenerator(source)
+        val first = SecurePassphraseStore(context, config, generator) { secretKey }.getOrCreatePassphrase()
+        val reopened = SecurePassphraseStore(context, config, generator) { secretKey }.getOrCreatePassphrase()
+
+        assertEquals(32, first.size)
+        assertArrayEquals(ByteArray(32) { 0x5a.toByte() }, first)
+        assertArrayEquals(first, reopened)
+        assertEquals(listOf(32), source.requestedSizes)
+    }
+
+    @Test fun generationFailureLeavesPreferencesUntouched() {
+        val config = VaultStorageConfig("generation-failure")
+        val failure = IllegalStateException("Random source unavailable")
+        val source = object : java.security.SecureRandom() {
+            override fun nextBytes(bytes: ByteArray) { throw failure }
+        }
+        val store = SecurePassphraseStore(context, config, SecretGenerator(source)) {
+            error("Must not request a key after generation failed")
+        }
+        assertSame(failure, assertThrows(IllegalStateException::class.java) { store.getOrCreatePassphrase() })
+        assertTrue(context.getSharedPreferences(config.preferencesName, 0).all.isEmpty())
+    }
+
     @Test fun distinctVaultsAreIsolatedAndSameNamespaceReopens() {
         val a = VaultStorageConfig("test-a")
         val b = VaultStorageConfig("test-b")
         val keyA = key()
         val keyB = key()
-        val first = SecurePassphraseStore(context, a) { keyA }.getOrCreatePassphrase()
-        val second = SecurePassphraseStore(context, b) { keyB }.getOrCreatePassphrase()
+        val first = SecurePassphraseStore(context, a, SecretGenerator(RecordingSecureRandom())) { keyA }.getOrCreatePassphrase()
+        val second = SecurePassphraseStore(context, b, SecretGenerator(RecordingSecureRandom(0x6b.toByte()))) { keyB }.getOrCreatePassphrase()
         assertFalse(first.contentEquals(second))
-        assertArrayEquals(first, SecurePassphraseStore(context, a) { keyA }.getOrCreatePassphrase())
+        assertArrayEquals(first, SecurePassphraseStore(context, a, SecretGenerator(RecordingSecureRandom())) { keyA }.getOrCreatePassphrase())
         context.getSharedPreferences(a.preferencesName, 0).edit().clear().commit()
-        assertArrayEquals(second, SecurePassphraseStore(context, b) { keyB }.getOrCreatePassphrase())
+        assertArrayEquals(second, SecurePassphraseStore(context, b, SecretGenerator(RecordingSecureRandom(0x6b.toByte()))) { keyB }.getOrCreatePassphrase())
     }
 
     @Test fun legacyCiphertextWrittenByOriginalFormatIsReusedWithoutRewriting() {
@@ -45,7 +72,8 @@ class SecurePassphraseStoreTest {
         val migrated = SecurePassphraseStore(context, VaultStorageConfig.legacyDemo()) { oldKey }
         assertArrayEquals(originalPassphrase, migrated.getOrCreatePassphrase())
         assertEquals(before, prefs.all)
-        val fresh = SecurePassphraseStore(context, VaultStorageConfig("demo")) { key() }
+        val fresh = SecurePassphraseStore(context, VaultStorageConfig("demo"),
+            SecretGenerator(RecordingSecureRandom())) { key() }
         assertFalse(originalPassphrase.contentEquals(fresh.getOrCreatePassphrase()))
         assertEquals(before, prefs.all)
     }
@@ -86,4 +114,3 @@ class SecurePassphraseStoreTest {
         }
     }
 }
-

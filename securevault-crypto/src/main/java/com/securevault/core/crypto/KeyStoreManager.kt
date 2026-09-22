@@ -38,6 +38,7 @@ class KeyStoreManager(val storageConfig: VaultStorageConfig) {
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
                     .setUserAuthenticationRequired(false)
                     .build()
+            // Key material is generated inside Android Keystore, not from application random bytes.
             keyGenerator.init(spec)
             return keyGenerator.generateKey()
         } catch (e: Exception) {
