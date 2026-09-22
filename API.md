@@ -60,3 +60,5 @@ CI. Review source compatibility and behavior too: binary dumps do not capture
 all semantics, parameter names, constant values or implementation behavior.
 
 Validator documentation: https://github.com/Kotlin/binary-compatibility-validator
+
+The SDK also exposes SecureVaultCryptoException and SecureVaultCryptoFailure for safe crypto recovery. See [CRYPTO_FAILURES.md](CRYPTO_FAILURES.md).

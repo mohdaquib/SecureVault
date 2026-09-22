@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":securevault-core"))
+    api(project(":securevault-core"))
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.core)
     implementation(libs.androidx.core.ktx)

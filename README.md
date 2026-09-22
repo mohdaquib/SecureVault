@@ -68,3 +68,5 @@ It focuses on **doing security correctly** — not just enabling features, but *
 See [API.md](API.md) for supported public types, demo-only boundaries, and the API dump review workflow.
 
 See [NAMESPACES.md](NAMESPACES.md) for vault isolation and the legacy demo upgrade path.
+
+See [CRYPTO_FAILURES.md](CRYPTO_FAILURES.md) for typed crypto failures and safe recovery choices.

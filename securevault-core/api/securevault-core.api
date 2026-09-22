@@ -46,6 +46,25 @@ public final class com/securevault/sdk/SecureVaultConfig {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/securevault/sdk/SecureVaultCryptoException : com/securevault/sdk/SecureVaultException {
+	public fun <init> (Lcom/securevault/sdk/SecureVaultCryptoFailure;)V
+	public final fun getFailure ()Lcom/securevault/sdk/SecureVaultCryptoFailure;
+}
+
+public final class com/securevault/sdk/SecureVaultCryptoFailure : java/lang/Enum {
+	public static final field AUTHENTICATION_EXPIRED Lcom/securevault/sdk/SecureVaultCryptoFailure;
+	public static final field AUTHENTICATION_REQUIRED Lcom/securevault/sdk/SecureVaultCryptoFailure;
+	public static final field CORRUPT_CIPHERTEXT Lcom/securevault/sdk/SecureVaultCryptoFailure;
+	public static final field KEYSTORE_UNAVAILABLE Lcom/securevault/sdk/SecureVaultCryptoFailure;
+	public static final field KEY_PERMANENTLY_INVALIDATED Lcom/securevault/sdk/SecureVaultCryptoFailure;
+	public static final field MISSING_KEY Lcom/securevault/sdk/SecureVaultCryptoFailure;
+	public static final field UNEXPECTED_PROVIDER_FAILURE Lcom/securevault/sdk/SecureVaultCryptoFailure;
+	public static final field UNSUPPORTED_HARDWARE Lcom/securevault/sdk/SecureVaultCryptoFailure;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/securevault/sdk/SecureVaultCryptoFailure;
+	public static fun values ()[Lcom/securevault/sdk/SecureVaultCryptoFailure;
+}
+
 public class com/securevault/sdk/SecureVaultException : java/lang/RuntimeException {
 	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
