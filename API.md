@@ -27,7 +27,7 @@ implementation constructors or third-party types to SDK signatures.
 
 ## Demo-only module boundaries
 
-`:app`, `:domain`, `:data`, `:core-crypto` and `:core-network` are application/demo
+`:app`, `:demo-domain`, `:demo-data`, `:securevault-crypto` and `:securevault-network` are application/demo
 code, not SDK distribution artifacts or supported customer dependencies. They are
 explicitly excluded from customer binary compatibility validation. Their public
 cross-module declarations are not promises to SDK customers:
@@ -35,7 +35,9 @@ cross-module declarations are not promises to SDK customers:
 - Domain Note, repository and use cases connect demo UI and storage.
 - SecureVaultDataFactory creates the demo repository. Room database, DAO, entity,
   converters, mappers and repository implementation are internal to data.
-- KeyStoreManager and SecurePassphraseStore support data and instrumentation tests.
+- KeyStoreManager, SecurePassphraseStore and VaultStorageConfig support data and
+  instrumentation tests. Namespace and legacy storage behavior is documented in
+  [NAMESPACES.md](NAMESPACES.md).
 - SecurityHealthChecker and NetworkResult/NetworkError support the demo UI.
   Its public constructor takes no transport types; Retrofit, HealthApi, client
   builders, interceptor and mapping helpers are internal to networking.

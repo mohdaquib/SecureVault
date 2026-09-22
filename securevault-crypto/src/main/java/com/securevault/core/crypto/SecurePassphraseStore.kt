@@ -2,48 +2,56 @@ package com.securevault.core.crypto
 
 import android.content.Context
 import android.util.Base64
+import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
-class SecurePassphraseStore(private val context: Context,
-    private val keyStoreManager: KeyStoreManager) {
-    private val prefs = context.getSharedPreferences("securevault_crypto",
-        Context.MODE_PRIVATE)
+class SecurePassphraseStore internal constructor(
+    context: Context,
+    val storageConfig: VaultStorageConfig,
+    private val getKey: () -> SecretKey,
+) {
+    constructor(context: Context, keyStoreManager: KeyStoreManager) :
+        this(context, keyStoreManager.storageConfig, keyStoreManager::getOrCreateSecretKey)
 
-    fun getOrCreatePassphrase(): ByteArray {
+    private val prefs = context.applicationContext.getSharedPreferences(
+        storageConfig.preferencesName, Context.MODE_PRIVATE,
+    )
+
+    fun getOrCreatePassphrase(): ByteArray = synchronized(passphraseLock) {
         val encrypted = prefs.getString("encrypted_passphrase", null)
         val iv = prefs.getString("passphrase_iv", null)
-
-        return if (encrypted != null && iv != null) {
+        check((encrypted == null) == (iv == null)) { "Incomplete vault passphrase state" }
+        if (encrypted != null && iv != null) {
             decrypt(encrypted, iv)
         } else {
-            val passphrase = kotlin.random.Random.nextBytes(32)
+            val passphrase = ByteArray(32).also { SecureRandom().nextBytes(it) }
             val (cipherText, ivBytes) = encrypt(passphrase)
-            prefs.edit()
+            check(prefs.edit()
                 .putString("encrypted_passphrase", cipherText)
                 .putString("passphrase_iv", ivBytes)
-                .apply()
+                .commit()) { "Could not persist vault passphrase" }
             passphrase
         }
     }
 
     private fun encrypt(data: ByteArray): Pair<String, String> {
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-        val key: SecretKey = keyStoreManager.getOrCreateSecretKey()
-        cipher.init(Cipher.ENCRYPT_MODE, key)
-
-        val encrypted = cipher.doFinal(data)
-        return Base64.encodeToString(encrypted, Base64.NO_WRAP) to
-                Base64.encodeToString(cipher.iv, Base64.NO_WRAP)
+        cipher.init(Cipher.ENCRYPT_MODE, getKey())
+        return Base64.encodeToString(cipher.doFinal(data), Base64.NO_WRAP) to
+            Base64.encodeToString(cipher.iv, Base64.NO_WRAP)
     }
 
     private fun decrypt(encrypted: String, iv: String): ByteArray {
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-        val key = keyStoreManager.getOrCreateSecretKey()
-        cipher.init(Cipher.DECRYPT_MODE, key,
-            GCMParameterSpec(128, Base64.decode(iv, Base64.NO_WRAP))
-        )
+        cipher.init(Cipher.DECRYPT_MODE, getKey(),
+            GCMParameterSpec(128, Base64.decode(iv, Base64.NO_WRAP)))
         return cipher.doFinal(Base64.decode(encrypted, Base64.NO_WRAP))
+    }
+
+    private companion object {
+        // Serializes initial creation across all instances in this process.
+        val passphraseLock = Any()
     }
 }

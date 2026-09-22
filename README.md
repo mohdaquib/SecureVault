@@ -66,3 +66,5 @@ It focuses on **doing security correctly** — not just enabling features, but *
 ## SDK API boundary
 
 See [API.md](API.md) for supported public types, demo-only boundaries, and the API dump review workflow.
+
+See [NAMESPACES.md](NAMESPACES.md) for vault isolation and the legacy demo upgrade path.

@@ -1,6 +1,7 @@
 package com.securevault.di
 
 import android.content.Context
+import com.securevault.core.crypto.VaultStorageConfig
 import com.securevault.demo.data.SecureVaultDataFactory
 import com.securevault.demo.domain.repository.NotesRepository
 import com.securevault.demo.domain.usecase.CreateNoteUseCase
@@ -19,7 +20,7 @@ internal object NotesModule {
     @Provides
     @Singleton
     fun provideNotesRepository(@ApplicationContext context: Context): NotesRepository =
-        SecureVaultDataFactory.createNotesRepository(context)
+        SecureVaultDataFactory.createNotesRepository(context, VaultStorageConfig.legacyDemo())
 
     @Provides
     fun provideGetNotesUseCase(repo: NotesRepository) = GetNotesUseCase(repository = repo)
