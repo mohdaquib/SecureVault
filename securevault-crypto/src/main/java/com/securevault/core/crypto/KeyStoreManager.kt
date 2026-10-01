@@ -7,6 +7,8 @@ import android.security.keystore.KeyProperties
 import android.security.keystore.StrongBoxUnavailableException
 import com.securevault.sdk.SecureVaultCryptoException
 import com.securevault.sdk.SecureVaultCryptoFailure
+import com.securevault.sdk.SecureVaultAllowedAuthenticators
+import com.securevault.sdk.SecureVaultKeyAuthenticationPolicy
 import com.securevault.sdk.SecureVaultSecurityLevel
 import com.securevault.sdk.SecureVaultSecurityLevelPolicy
 import java.security.KeyStore
@@ -18,6 +20,7 @@ internal data class StoredKey(
     val key: SecretKey,
     val usesTimedAuthentication: Boolean = false,
     val securityLevel: SecureVaultSecurityLevel = SecureVaultSecurityLevel.UNKNOWN_OR_UNAVAILABLE,
+    val matchesAuthenticationPolicy: Boolean = true,
 )
 
 internal interface KeyStoreBackend {
@@ -32,7 +35,11 @@ class KeyStoreManager internal constructor(
 ) {
     constructor(storageConfig: VaultStorageConfig) : this(
         storageConfig,
-        AndroidKeyStoreBackend(storageConfig.keyAlias, storageConfig.securityLevelPolicy),
+        AndroidKeyStoreBackend(
+            storageConfig.keyAlias,
+            storageConfig.securityLevelPolicy,
+            storageConfig.keyAuthenticationPolicy,
+        ),
     )
 
     internal val authentication = AuthenticationEvidence()
@@ -82,6 +89,11 @@ class KeyStoreManager internal constructor(
     }
 
     private fun requireAcceptable(stored: StoredKey): StoredKey {
+        if (!stored.matchesAuthenticationPolicy) {
+            throw SecureVaultCryptoException(
+                SecureVaultCryptoFailure.UNSUPPORTED_AUTHENTICATION_POLICY,
+            )
+        }
         val policy = storageConfig.securityLevelPolicy
         if (policy.isRequired && !stored.securityLevel.meets(policy.preferredLevel)) {
             throw SecureVaultCryptoException(SecureVaultCryptoFailure.UNSUPPORTED_HARDWARE)
@@ -95,6 +107,7 @@ class KeyStoreManager internal constructor(
 private class AndroidKeyStoreBackend(
     private val alias: String,
     private val securityLevelPolicy: SecureVaultSecurityLevelPolicy,
+    private val keyAuthenticationPolicy: SecureVaultKeyAuthenticationPolicy,
 ) : KeyStoreBackend {
     private val keyStore: KeyStore by lazy {
         cryptoOperation(CryptoOperation.LOAD_KEYSTORE) {
@@ -120,6 +133,7 @@ private class AndroidKeyStoreBackend(
             usesTimedAuthentication = info.isUserAuthenticationRequired &&
                 info.userAuthenticationValidityDurationSeconds > 0,
             securityLevel = info.secureVaultSecurityLevel(),
+            matchesAuthenticationPolicy = info.matches(keyAuthenticationPolicy),
         )
     }
 
@@ -149,7 +163,7 @@ private class AndroidKeyStoreBackend(
             .setKeySize(256)
             .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-            .setUserAuthenticationRequired(false)
+            .applyKeyAuthenticationPolicy(keyAuthenticationPolicy)
         if (strongBox && Build.VERSION.SDK_INT >= 28) builder.setIsStrongBoxBacked(true)
         generator.init(builder.build())
         val key = generator.generateKey()
@@ -166,10 +180,96 @@ private class AndroidKeyStoreBackend(
             } else {
                 info.secureVaultSecurityLevel()
             },
+            matchesAuthenticationPolicy = info.matches(keyAuthenticationPolicy),
         )
     }
 
     override fun delete() { keyStore.deleteEntry(alias) }
+}
+
+private fun KeyInfo.matches(policy: SecureVaultKeyAuthenticationPolicy): Boolean = when (policy) {
+    SecureVaultKeyAuthenticationPolicy.None -> !isUserAuthenticationRequired
+    is SecureVaultKeyAuthenticationPolicy.EveryOperation ->
+        isUserAuthenticationRequired &&
+            userAuthenticationValidityDurationSeconds ==
+            (if (Build.VERSION.SDK_INT >= 30) 0 else -1) &&
+            matches(policy.allowedAuthenticators)
+    is SecureVaultKeyAuthenticationPolicy.ValidFor ->
+        isUserAuthenticationRequired &&
+            userAuthenticationValidityDurationSeconds == policy.validityDurationSeconds &&
+            matches(policy.allowedAuthenticators)
+}
+
+private fun KeyInfo.matches(allowed: SecureVaultAllowedAuthenticators): Boolean {
+    if (Build.VERSION.SDK_INT < 30) {
+        return when (allowed) {
+            SecureVaultAllowedAuthenticators.BIOMETRIC_ONLY ->
+                userAuthenticationValidityDurationSeconds == -1
+            SecureVaultAllowedAuthenticators.BIOMETRIC_OR_DEVICE_CREDENTIAL ->
+                userAuthenticationValidityDurationSeconds > 0
+        }
+    }
+    val expected = when (allowed) {
+        SecureVaultAllowedAuthenticators.BIOMETRIC_ONLY -> KeyProperties.AUTH_BIOMETRIC_STRONG
+        SecureVaultAllowedAuthenticators.BIOMETRIC_OR_DEVICE_CREDENTIAL ->
+            KeyProperties.AUTH_BIOMETRIC_STRONG or KeyProperties.AUTH_DEVICE_CREDENTIAL
+    }
+    return userAuthenticationType == expected
+}
+
+internal fun KeyGenParameterSpec.Builder.applyKeyAuthenticationPolicy(
+    policy: SecureVaultKeyAuthenticationPolicy,
+): KeyGenParameterSpec.Builder = apply {
+    when (policy) {
+        SecureVaultKeyAuthenticationPolicy.None -> setUserAuthenticationRequired(false)
+        is SecureVaultKeyAuthenticationPolicy.EveryOperation -> configureAuthentication(
+            timeoutSeconds = 0,
+            allowedAuthenticators = policy.allowedAuthenticators,
+        )
+        is SecureVaultKeyAuthenticationPolicy.ValidFor -> configureAuthentication(
+            timeoutSeconds = policy.validityDurationSeconds,
+            allowedAuthenticators = policy.allowedAuthenticators,
+        )
+    }
+}
+
+private fun KeyGenParameterSpec.Builder.configureAuthentication(
+    timeoutSeconds: Int,
+    allowedAuthenticators: SecureVaultAllowedAuthenticators,
+) {
+    setUserAuthenticationRequired(true)
+    if (Build.VERSION.SDK_INT >= 30) {
+        val authenticationTypes = when (allowedAuthenticators) {
+            SecureVaultAllowedAuthenticators.BIOMETRIC_ONLY -> KeyProperties.AUTH_BIOMETRIC_STRONG
+            SecureVaultAllowedAuthenticators.BIOMETRIC_OR_DEVICE_CREDENTIAL ->
+                KeyProperties.AUTH_BIOMETRIC_STRONG or KeyProperties.AUTH_DEVICE_CREDENTIAL
+        }
+        setUserAuthenticationParameters(timeoutSeconds, authenticationTypes)
+        setInvalidatedByBiometricEnrollment(
+            allowedAuthenticators == SecureVaultAllowedAuthenticators.BIOMETRIC_ONLY,
+        )
+        return
+    }
+
+    // Before API 30 Android cannot independently select authenticator type and timeout. The only
+    // combinations it can faithfully enforce are per-use biometric or a timed credential window.
+    when {
+        timeoutSeconds == 0 &&
+            allowedAuthenticators == SecureVaultAllowedAuthenticators.BIOMETRIC_ONLY -> {
+            @Suppress("DEPRECATION")
+            setUserAuthenticationValidityDurationSeconds(-1)
+            setInvalidatedByBiometricEnrollment(true)
+        }
+        timeoutSeconds > 0 &&
+            allowedAuthenticators == SecureVaultAllowedAuthenticators.BIOMETRIC_OR_DEVICE_CREDENTIAL -> {
+            @Suppress("DEPRECATION")
+            setUserAuthenticationValidityDurationSeconds(timeoutSeconds)
+            setInvalidatedByBiometricEnrollment(false)
+        }
+        else -> throw SecureVaultCryptoException(
+            SecureVaultCryptoFailure.UNSUPPORTED_AUTHENTICATION_POLICY,
+        )
+    }
 }
 
 private fun KeyInfo.secureVaultSecurityLevel(): SecureVaultSecurityLevel =

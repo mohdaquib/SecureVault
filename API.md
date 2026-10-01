@@ -16,6 +16,10 @@ Intentionally public types in `com.securevault.sdk`:
   execution environment, StrongBox, or unknown/unavailable.
 - `SecureVaultSecurityLevelPolicy`: whether software is allowed or TEE/StrongBox is preferred or
   required. See [HARDWARE_SECURITY.md](HARDWARE_SECURITY.md) for fallback and reporting behavior.
+- `SecureVaultKeyAuthenticationPolicy` and `SecureVaultAllowedAuthenticators`: whether key use
+  requires no authentication, fresh authentication for every operation, or authentication valid
+  for a configured period, using biometrics alone or biometrics/device credentials. See
+  [KEY_AUTHENTICATION.md](KEY_AUTHENTICATION.md).
 - `SecureVaultCapability`: stable feature identifiers (availability is reported
   separately; the current facade has no attached capabilities).
 - `SecureVaultVersion`: version constant, also available as `SecureVault.SDK_VERSION`.

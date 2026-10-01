@@ -73,3 +73,6 @@ See [CRYPTO_FAILURES.md](CRYPTO_FAILURES.md) for typed crypto failures and safe 
 
 See [HARDWARE_SECURITY.md](HARDWARE_SECURITY.md) for per-key hardware security reporting and
 preferred versus required TEE/StrongBox behavior.
+
+See [KEY_AUTHENTICATION.md](KEY_AUTHENTICATION.md) for per-operation, timed, biometric, and device
+credential policies and their failure behavior.

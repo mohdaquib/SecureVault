@@ -103,6 +103,23 @@ class KeyStoreManagerSecurityLevelTest {
         assertEquals(1, backend.deletes)
     }
 
+    @Test fun existingKeyWithMismatchedAuthenticationPolicyIsRejectedWithoutDeletion() {
+        val existing = StoredKey(
+            key = SecretKeySpec(ByteArray(32), "AES"),
+            securityLevel = SecureVaultSecurityLevel.SOFTWARE,
+            matchesAuthenticationPolicy = false,
+        )
+        val backend = Backend(stored = existing)
+
+        val error = assertThrows(SecureVaultCryptoException::class.java) {
+            manager(SecureVaultSecurityLevelPolicy.ALLOW_SOFTWARE, backend).getSecretKey()
+        }
+
+        assertEquals(SecureVaultCryptoFailure.UNSUPPORTED_AUTHENTICATION_POLICY, error.failure)
+        assertSame(existing, backend.stored)
+        assertEquals(0, backend.deletes)
+    }
+
     private fun manager(
         policy: SecureVaultSecurityLevelPolicy,
         backend: Backend,

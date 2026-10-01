@@ -13,6 +13,9 @@ crypto operations currently originate in the crypto module and demo data factory
 | KEY_PERMANENTLY_INVALIDATED | Android explicitly reports permanent invalidation. Re-authentication will not repair it. Preserve data and explain recovery/reset options. |
 | AUTHENTICATION_REQUIRED | Android requires authentication, with no evidence of a previously successful timed authorization in this session. Request the authentication allowed by the key policy, then retry the operation. |
 | AUTHENTICATION_EXPIRED | A timed-authentication key successfully completed a crypto operation through this manager, and Android subsequently rejected its authentication. Ask the user to authenticate again, then retry. |
+| AUTHENTICATION_CANCELLED | The host application's biometric or credential prompt ended through user, negative-button, or system cancellation. Preserve data and let the user retry when appropriate. |
+| AUTHENTICATION_LOCKED_OUT | Android's authentication prompt reports temporary or permanent biometric lockout. Preserve data; follow the platform's retry or device-credential recovery guidance. |
+| UNSUPPORTED_AUTHENTICATION_POLICY | This Android version cannot faithfully enforce the requested authenticator and timing combination, or an existing key has a different policy. Never weaken the policy or replace an existing key automatically. |
 | CORRUPT_CIPHERTEXT | Missing/invalid metadata, malformed encoding or lengths, or failed GCM integrity verification. Preserve data; offer restore/support. A wrong key also fails integrity verification and cannot be distinguished from tampering. |
 | UNSUPPORTED_HARDWARE | A required security level is not met, an explicit StrongBox-unavailable error occurs, or Android reports an unsupported KeyMint feature. Explain the requirement. Required policies never weaken security or generate fallback keys; `PREFER_STRONGBOX` explicitly permits fallback. |
 | KEYSTORE_UNAVAILABLE | Keystore could not be loaded, the provider is absent, or Android reports an uninitialized/transient service condition. Preserve storage; allow a bounded later retry after device unlock/setup or service recovery. This classification does not promise retry will succeed. |
@@ -27,6 +30,8 @@ try {
     when (error.failure) {
         SecureVaultCryptoFailure.AUTHENTICATION_REQUIRED,
         SecureVaultCryptoFailure.AUTHENTICATION_EXPIRED -> showAuthenticationPrompt()
+        SecureVaultCryptoFailure.AUTHENTICATION_CANCELLED -> showAuthenticationCancelled()
+        SecureVaultCryptoFailure.AUTHENTICATION_LOCKED_OUT -> showAuthenticationLockout()
         SecureVaultCryptoFailure.KEYSTORE_UNAVAILABLE -> showRetryLater()
         SecureVaultCryptoFailure.UNSUPPORTED_HARDWARE -> showUnsupportedDevice()
         else -> showRecoveryHelpWithoutDeletingData()
@@ -45,8 +50,9 @@ Without that evidence (including after process restart), it reports REQUIRED.
 Per-operation authentication also reports REQUIRED. EXPIRED means a previously
 accepted timed authorization no longer works; it does not prove a precise timeout.
 Key validity expiry (`KeyExpiredException`) and operation expiry are not mislabeled
-as authentication expiry. Existing generated demo keys do not require authentication;
-this change does not enable biometrics or alter their key policy.
+as authentication expiry. Existing generated demo keys do not require authentication
+unless a customer selects a stronger policy. Reopening an existing key with a different
+policy fails rather than bypassing the policy.
 
 StrongBox errors are checked only on API 28+, and public numeric Keystore errors on
 API 33+. Older versions use concrete exception types, otherwise the unknown reason.
@@ -65,16 +71,20 @@ remains unsupported.
 
 Mapped exceptions contain a fixed message and enum only. Provider causes, suppressed
 exceptions, messages, aliases, ciphertext and plaintext are not attached or logged.
-Cancellation and fatal VM errors are not converted into crypto failures. Applications
-must also avoid logging secret arguments or returned passphrases themselves.
+Coroutine cancellation and fatal VM errors are not converted into crypto failures.
+Authentication prompt cancellation is a separate, explicitly modeled
+`AUTHENTICATION_CANCELLED` outcome. Applications must also avoid logging secret
+arguments or returned passphrases themselves.
 
 ## Review and validation
 
 Regression tests cover each failure reason, nested exceptions and redaction,
 authentication evidence, missing/failed lookup without creation, corrupt preferences,
 lost metadata with an existing database, and unchanged ciphertext after failures.
+Instrumented tests inspect the Android `KeyGenParameterSpec` produced for no-authentication,
+every-operation, timed, biometric-only, and biometric/device-credential policies.
 No app execution, compilation, test run or Gradle task was performed for this change.
-The two new public types were added to the API baseline by hand; validate with
+The new public types were added to the API baseline by hand; validate with
 `:securevault-core:apiCheck` and run crypto/core tests when compilation is permitted.
 
 Platform references:

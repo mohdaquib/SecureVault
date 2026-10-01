@@ -5,6 +5,8 @@ public data class SecureVaultConfig @JvmOverloads public constructor(
     public val namespace: String,
     public val securityLevelPolicy: SecureVaultSecurityLevelPolicy =
         SecureVaultSecurityLevelPolicy.ALLOW_SOFTWARE,
+    public val keyAuthenticationPolicy: SecureVaultKeyAuthenticationPolicy =
+        SecureVaultKeyAuthenticationPolicy.None,
 ) {
     init {
         validate()

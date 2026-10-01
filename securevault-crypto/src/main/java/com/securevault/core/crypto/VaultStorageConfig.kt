@@ -1,6 +1,7 @@
 package com.securevault.core.crypto
 
 import com.securevault.sdk.SecureVaultConfig
+import com.securevault.sdk.SecureVaultKeyAuthenticationPolicy
 import com.securevault.sdk.SecureVaultSecurityLevelPolicy
 
 /** Storage identity shared by the key, passphrase and database layers. */
@@ -12,13 +13,17 @@ class VaultStorageConfig private constructor(
         namespace: String,
         securityLevelPolicy: SecureVaultSecurityLevelPolicy =
             SecureVaultSecurityLevelPolicy.ALLOW_SOFTWARE,
-    ) : this(SecureVaultConfig(namespace, securityLevelPolicy), false)
+        keyAuthenticationPolicy: SecureVaultKeyAuthenticationPolicy =
+            SecureVaultKeyAuthenticationPolicy.None,
+    ) : this(SecureVaultConfig(namespace, securityLevelPolicy, keyAuthenticationPolicy), false)
 
     constructor(config: SecureVaultConfig) : this(config, false)
 
     val namespace: String? get() = config?.namespace
     val securityLevelPolicy: SecureVaultSecurityLevelPolicy
         get() = config?.securityLevelPolicy ?: SecureVaultSecurityLevelPolicy.ALLOW_SOFTWARE
+    val keyAuthenticationPolicy: SecureVaultKeyAuthenticationPolicy
+        get() = config?.keyAuthenticationPolicy ?: SecureVaultKeyAuthenticationPolicy.None
 
     // Fixed-width ASCII hex is injective and safe even on case-insensitive filesystems.
     private val prefix: String? = config?.namespace?.let { namespace ->

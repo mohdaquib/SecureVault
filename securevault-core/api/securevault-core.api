@@ -35,17 +35,60 @@ public final class com/securevault/sdk/SecureVaultCapabilityUnavailableException
 	public final fun getCapability ()Lcom/securevault/sdk/SecureVaultCapability;
 }
 
+public final class com/securevault/sdk/SecureVaultAllowedAuthenticators : java/lang/Enum {
+	public static final field BIOMETRIC_ONLY Lcom/securevault/sdk/SecureVaultAllowedAuthenticators;
+	public static final field BIOMETRIC_OR_DEVICE_CREDENTIAL Lcom/securevault/sdk/SecureVaultAllowedAuthenticators;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/securevault/sdk/SecureVaultAllowedAuthenticators;
+	public static fun values ()[Lcom/securevault/sdk/SecureVaultAllowedAuthenticators;
+}
+
 public final class com/securevault/sdk/SecureVaultConfig {
 	public fun <init> (Ljava/lang/String;)V
 	public fun <init> (Ljava/lang/String;Lcom/securevault/sdk/SecureVaultSecurityLevelPolicy;)V
-	public synthetic fun <init> (Ljava/lang/String;Lcom/securevault/sdk/SecureVaultSecurityLevelPolicy;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Lcom/securevault/sdk/SecureVaultSecurityLevelPolicy;Lcom/securevault/sdk/SecureVaultKeyAuthenticationPolicy;)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/securevault/sdk/SecureVaultSecurityLevelPolicy;Lcom/securevault/sdk/SecureVaultKeyAuthenticationPolicy;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lcom/securevault/sdk/SecureVaultSecurityLevelPolicy;
-	public final fun copy (Ljava/lang/String;Lcom/securevault/sdk/SecureVaultSecurityLevelPolicy;)Lcom/securevault/sdk/SecureVaultConfig;
-	public static synthetic fun copy$default (Lcom/securevault/sdk/SecureVaultConfig;Ljava/lang/String;Lcom/securevault/sdk/SecureVaultSecurityLevelPolicy;ILjava/lang/Object;)Lcom/securevault/sdk/SecureVaultConfig;
+	public final fun component3 ()Lcom/securevault/sdk/SecureVaultKeyAuthenticationPolicy;
+	public final fun copy (Ljava/lang/String;Lcom/securevault/sdk/SecureVaultSecurityLevelPolicy;Lcom/securevault/sdk/SecureVaultKeyAuthenticationPolicy;)Lcom/securevault/sdk/SecureVaultConfig;
+	public static synthetic fun copy$default (Lcom/securevault/sdk/SecureVaultConfig;Ljava/lang/String;Lcom/securevault/sdk/SecureVaultSecurityLevelPolicy;Lcom/securevault/sdk/SecureVaultKeyAuthenticationPolicy;ILjava/lang/Object;)Lcom/securevault/sdk/SecureVaultConfig;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getKeyAuthenticationPolicy ()Lcom/securevault/sdk/SecureVaultKeyAuthenticationPolicy;
 	public final fun getNamespace ()Ljava/lang/String;
 	public final fun getSecurityLevelPolicy ()Lcom/securevault/sdk/SecureVaultSecurityLevelPolicy;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class com/securevault/sdk/SecureVaultKeyAuthenticationPolicy {
+	public synthetic fun <init> (Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class com/securevault/sdk/SecureVaultKeyAuthenticationPolicy$EveryOperation : com/securevault/sdk/SecureVaultKeyAuthenticationPolicy {
+	public fun <init> (Lcom/securevault/sdk/SecureVaultAllowedAuthenticators;)V
+	public final fun component1 ()Lcom/securevault/sdk/SecureVaultAllowedAuthenticators;
+	public final fun copy (Lcom/securevault/sdk/SecureVaultAllowedAuthenticators;)Lcom/securevault/sdk/SecureVaultKeyAuthenticationPolicy$EveryOperation;
+	public static synthetic fun copy$default (Lcom/securevault/sdk/SecureVaultKeyAuthenticationPolicy$EveryOperation;Lcom/securevault/sdk/SecureVaultAllowedAuthenticators;ILjava/lang/Object;)Lcom/securevault/sdk/SecureVaultKeyAuthenticationPolicy$EveryOperation;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAllowedAuthenticators ()Lcom/securevault/sdk/SecureVaultAllowedAuthenticators;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/securevault/sdk/SecureVaultKeyAuthenticationPolicy$None : com/securevault/sdk/SecureVaultKeyAuthenticationPolicy {
+	public static final field INSTANCE Lcom/securevault/sdk/SecureVaultKeyAuthenticationPolicy$None;
+}
+
+public final class com/securevault/sdk/SecureVaultKeyAuthenticationPolicy$ValidFor : com/securevault/sdk/SecureVaultKeyAuthenticationPolicy {
+	public fun <init> (ILcom/securevault/sdk/SecureVaultAllowedAuthenticators;)V
+	public final fun component1 ()I
+	public final fun component2 ()Lcom/securevault/sdk/SecureVaultAllowedAuthenticators;
+	public final fun copy (ILcom/securevault/sdk/SecureVaultAllowedAuthenticators;)Lcom/securevault/sdk/SecureVaultKeyAuthenticationPolicy$ValidFor;
+	public static synthetic fun copy$default (Lcom/securevault/sdk/SecureVaultKeyAuthenticationPolicy$ValidFor;ILcom/securevault/sdk/SecureVaultAllowedAuthenticators;ILjava/lang/Object;)Lcom/securevault/sdk/SecureVaultKeyAuthenticationPolicy$ValidFor;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAllowedAuthenticators ()Lcom/securevault/sdk/SecureVaultAllowedAuthenticators;
+	public final fun getValidityDurationSeconds ()I
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -79,13 +122,16 @@ public final class com/securevault/sdk/SecureVaultCryptoException : com/secureva
 }
 
 public final class com/securevault/sdk/SecureVaultCryptoFailure : java/lang/Enum {
+	public static final field AUTHENTICATION_CANCELLED Lcom/securevault/sdk/SecureVaultCryptoFailure;
 	public static final field AUTHENTICATION_EXPIRED Lcom/securevault/sdk/SecureVaultCryptoFailure;
+	public static final field AUTHENTICATION_LOCKED_OUT Lcom/securevault/sdk/SecureVaultCryptoFailure;
 	public static final field AUTHENTICATION_REQUIRED Lcom/securevault/sdk/SecureVaultCryptoFailure;
 	public static final field CORRUPT_CIPHERTEXT Lcom/securevault/sdk/SecureVaultCryptoFailure;
 	public static final field KEYSTORE_UNAVAILABLE Lcom/securevault/sdk/SecureVaultCryptoFailure;
 	public static final field KEY_PERMANENTLY_INVALIDATED Lcom/securevault/sdk/SecureVaultCryptoFailure;
 	public static final field MISSING_KEY Lcom/securevault/sdk/SecureVaultCryptoFailure;
 	public static final field UNEXPECTED_PROVIDER_FAILURE Lcom/securevault/sdk/SecureVaultCryptoFailure;
+	public static final field UNSUPPORTED_AUTHENTICATION_POLICY Lcom/securevault/sdk/SecureVaultCryptoFailure;
 	public static final field UNSUPPORTED_HARDWARE Lcom/securevault/sdk/SecureVaultCryptoFailure;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/securevault/sdk/SecureVaultCryptoFailure;
