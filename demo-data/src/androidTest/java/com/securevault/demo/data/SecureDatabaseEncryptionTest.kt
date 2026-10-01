@@ -3,6 +3,7 @@ package com.securevault.demo.data
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.securevault.core.crypto.VaultStorageConfig
 import com.securevault.core.crypto.KeyStoreManager
 import com.securevault.core.crypto.SecurePassphraseStore
 import com.securevault.demo.data.local.NoteEntity
@@ -26,7 +27,7 @@ class SecureDatabaseEncryptionTest {
     @Test
     fun database_is_encrypted_at_rest() = runBlocking {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        val keyStoreManager = KeyStoreManager()
+        val keyStoreManager = KeyStoreManager(VaultStorageConfig("encryption-test"))
         val passphraseStore = SecurePassphraseStore(context, keyStoreManager)
 
         val db = SecureDatabase.create(context = context, passphraseStore = passphraseStore)
@@ -41,7 +42,7 @@ class SecureDatabaseEncryptionTest {
         db.noteDao().insert(note)
         db.close()
 
-        val dbFile: File = context.getDatabasePath("securevault.db")
+        val dbFile: File = context.getDatabasePath(keyStoreManager.storageConfig.databaseName)
         val rawBytes = dbFile.readBytes()
         val rawText = String(rawBytes)
 

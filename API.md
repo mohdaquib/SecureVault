@@ -9,8 +9,17 @@ Intentionally public types in `com.securevault.sdk`:
 
 - `SecureVault`: final facade, private constructor, `create(Context, SecureVaultConfig)`
   factory, configuration, namespace, version and capability inspection.
-- `SecureVaultConfig`: immutable namespace value. Its constructor, copy,
-  destructuring and generated equality methods are part of the contract.
+- `SecureVaultConfig`: immutable namespace and key-protection policy. Its constructor, copy,
+  destructuring and generated equality methods are part of the contract. The one-argument JVM
+  constructor remains available and selects `ALLOW_SOFTWARE`.
+- `SecureVaultSecurityLevel`: the per-key protection level reported by Android: software, trusted
+  execution environment, StrongBox, or unknown/unavailable.
+- `SecureVaultSecurityLevelPolicy`: whether software is allowed or TEE/StrongBox is preferred or
+  required. See [HARDWARE_SECURITY.md](HARDWARE_SECURITY.md) for fallback and reporting behavior.
+- `SecureVaultKeyAuthenticationPolicy` and `SecureVaultAllowedAuthenticators`: whether key use
+  requires no authentication, fresh authentication for every operation, or authentication valid
+  for a configured period, using biometrics alone or biometrics/device credentials. See
+  [KEY_AUTHENTICATION.md](KEY_AUTHENTICATION.md).
 - `SecureVaultCapability`: stable feature identifiers (availability is reported
   separately; the current facade has no attached capabilities).
 - `SecureVaultVersion`: version constant, also available as `SecureVault.SDK_VERSION`.
@@ -27,7 +36,7 @@ implementation constructors or third-party types to SDK signatures.
 
 ## Demo-only module boundaries
 
-`:app`, `:domain`, `:data`, `:core-crypto` and `:core-network` are application/demo
+`:app`, `:demo-domain`, `:demo-data`, `:securevault-crypto` and `:securevault-network` are application/demo
 code, not SDK distribution artifacts or supported customer dependencies. They are
 explicitly excluded from customer binary compatibility validation. Their public
 cross-module declarations are not promises to SDK customers:
@@ -35,7 +44,9 @@ cross-module declarations are not promises to SDK customers:
 - Domain Note, repository and use cases connect demo UI and storage.
 - SecureVaultDataFactory creates the demo repository. Room database, DAO, entity,
   converters, mappers and repository implementation are internal to data.
-- KeyStoreManager and SecurePassphraseStore support data and instrumentation tests.
+- KeyStoreManager, SecurePassphraseStore and VaultStorageConfig support data and
+  instrumentation tests. Namespace and legacy storage behavior is documented in
+  [NAMESPACES.md](NAMESPACES.md).
 - SecurityHealthChecker and NetworkResult/NetworkError support the demo UI.
   Its public constructor takes no transport types; Retrofit, HealthApi, client
   builders, interceptor and mapping helpers are internal to networking.
@@ -58,3 +69,5 @@ CI. Review source compatibility and behavior too: binary dumps do not capture
 all semantics, parameter names, constant values or implementation behavior.
 
 Validator documentation: https://github.com/Kotlin/binary-compatibility-validator
+
+The SDK also exposes SecureVaultCryptoException and SecureVaultCryptoFailure for safe crypto recovery. See [CRYPTO_FAILURES.md](CRYPTO_FAILURES.md).

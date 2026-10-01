@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="11">
+      <module name="SecureVault.core-crypto" target="21" />
+      <module name="SecureVault.core-network" target="21" />
+      <module name="SecureVault.data" target="21" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,6 +1,7 @@
 package com.securevault.di
 
 import android.content.Context
+import com.securevault.core.crypto.VaultStorageConfig
 import com.securevault.core.crypto.KeyStoreManager
 import com.securevault.core.crypto.SecurePassphraseStore
 import dagger.Module
@@ -15,7 +16,7 @@ import javax.inject.Singleton
 object CryptoModule {
     @Provides
     @Singleton
-    fun provideKeyStoreManager(): KeyStoreManager = KeyStoreManager()
+    fun provideKeyStoreManager(): KeyStoreManager = KeyStoreManager(VaultStorageConfig.legacyDemo())
 
     @Provides
     @Singleton

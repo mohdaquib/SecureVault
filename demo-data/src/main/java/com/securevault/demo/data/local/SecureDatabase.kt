@@ -25,7 +25,7 @@ internal abstract class SecureDatabase : RoomDatabase() {
                 .databaseBuilder(
                     context,
                     SecureDatabase::class.java,
-                    "securevault.db",
+                    passphraseStore.storageConfig.databaseName,
                 ).openHelperFactory(factory)
                 .fallbackToDestructiveMigrationOnDowngrade(dropAllTables = true)
                 .build()

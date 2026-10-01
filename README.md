@@ -66,3 +66,13 @@ It focuses on **doing security correctly** — not just enabling features, but *
 ## SDK API boundary
 
 See [API.md](API.md) for supported public types, demo-only boundaries, and the API dump review workflow.
+
+See [NAMESPACES.md](NAMESPACES.md) for vault isolation and the legacy demo upgrade path.
+
+See [CRYPTO_FAILURES.md](CRYPTO_FAILURES.md) for typed crypto failures and safe recovery choices.
+
+See [HARDWARE_SECURITY.md](HARDWARE_SECURITY.md) for per-key hardware security reporting and
+preferred versus required TEE/StrongBox behavior.
+
+See [KEY_AUTHENTICATION.md](KEY_AUTHENTICATION.md) for per-operation, timed, biometric, and device
+credential policies and their failure behavior.
