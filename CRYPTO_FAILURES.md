@@ -14,7 +14,7 @@ crypto operations currently originate in the crypto module and demo data factory
 | AUTHENTICATION_REQUIRED | Android requires authentication, with no evidence of a previously successful timed authorization in this session. Request the authentication allowed by the key policy, then retry the operation. |
 | AUTHENTICATION_EXPIRED | A timed-authentication key successfully completed a crypto operation through this manager, and Android subsequently rejected its authentication. Ask the user to authenticate again, then retry. |
 | CORRUPT_CIPHERTEXT | Missing/invalid metadata, malformed encoding or lengths, or failed GCM integrity verification. Preserve data; offer restore/support. A wrong key also fails integrity verification and cannot be distinguished from tampering. |
-| UNSUPPORTED_HARDWARE | An explicit StrongBox-unavailable error or Android's unsupported KeyMint feature code. Explain the capability requirement. Never silently weaken security or generate fallback keys. |
+| UNSUPPORTED_HARDWARE | A required security level is not met, an explicit StrongBox-unavailable error occurs, or Android reports an unsupported KeyMint feature. Explain the requirement. Required policies never weaken security or generate fallback keys; `PREFER_STRONGBOX` explicitly permits fallback. |
 | KEYSTORE_UNAVAILABLE | Keystore could not be loaded, the provider is absent, or Android reports an uninitialized/transient service condition. Preserve storage; allow a bounded later retry after device unlock/setup or service recovery. This classification does not promise retry will succeed. |
 | UNEXPECTED_PROVIDER_FAILURE | An unclassified provider, key-metadata, generation, or storage failure. Stop; report only the stable reason and seek support. Never reset automatically. |
 

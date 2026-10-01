@@ -10,6 +10,29 @@ class SecureVaultConfigTest {
         val config = SecureVaultConfig(namespace = "customer-data")
 
         assertEquals("customer-data", config.namespace)
+        assertEquals(SecureVaultSecurityLevelPolicy.ALLOW_SOFTWARE, config.securityLevelPolicy)
+    }
+
+    @Test
+    fun acceptsExplicitSecurityLevelPolicy() {
+        val config = SecureVaultConfig(
+            namespace = "customer-data",
+            securityLevelPolicy = SecureVaultSecurityLevelPolicy.REQUIRE_STRONGBOX,
+        )
+
+        assertEquals(SecureVaultSecurityLevelPolicy.REQUIRE_STRONGBOX, config.securityLevelPolicy)
+        assertEquals(SecureVaultSecurityLevel.STRONGBOX, config.securityLevelPolicy.preferredLevel)
+        assertEquals(true, config.securityLevelPolicy.isRequired)
+    }
+
+    @Test
+    fun keepsOneArgumentJvmConstructorWithSoftwareAllowedDefault() {
+        val constructor = SecureVaultConfig::class.java.getConstructor(String::class.java)
+
+        val config = constructor.newInstance("java-customer")
+
+        assertEquals("java-customer", config.namespace)
+        assertEquals(SecureVaultSecurityLevelPolicy.ALLOW_SOFTWARE, config.securityLevelPolicy)
     }
 
     @Test

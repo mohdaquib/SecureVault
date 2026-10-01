@@ -9,8 +9,13 @@ Intentionally public types in `com.securevault.sdk`:
 
 - `SecureVault`: final facade, private constructor, `create(Context, SecureVaultConfig)`
   factory, configuration, namespace, version and capability inspection.
-- `SecureVaultConfig`: immutable namespace value. Its constructor, copy,
-  destructuring and generated equality methods are part of the contract.
+- `SecureVaultConfig`: immutable namespace and key-protection policy. Its constructor, copy,
+  destructuring and generated equality methods are part of the contract. The one-argument JVM
+  constructor remains available and selects `ALLOW_SOFTWARE`.
+- `SecureVaultSecurityLevel`: the per-key protection level reported by Android: software, trusted
+  execution environment, StrongBox, or unknown/unavailable.
+- `SecureVaultSecurityLevelPolicy`: whether software is allowed or TEE/StrongBox is preferred or
+  required. See [HARDWARE_SECURITY.md](HARDWARE_SECURITY.md) for fallback and reporting behavior.
 - `SecureVaultCapability`: stable feature identifiers (availability is reported
   separately; the current facade has no attached capabilities).
 - `SecureVaultVersion`: version constant, also available as `SecureVault.SDK_VERSION`.

@@ -70,3 +70,6 @@ See [API.md](API.md) for supported public types, demo-only boundaries, and the A
 See [NAMESPACES.md](NAMESPACES.md) for vault isolation and the legacy demo upgrade path.
 
 See [CRYPTO_FAILURES.md](CRYPTO_FAILURES.md) for typed crypto failures and safe recovery choices.
+
+See [HARDWARE_SECURITY.md](HARDWARE_SECURITY.md) for per-key hardware security reporting and
+preferred versus required TEE/StrongBox behavior.

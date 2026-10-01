@@ -1,8 +1,10 @@
 package com.securevault.sdk
 
 /** Configuration shared by all capabilities attached to a SecureVault instance. */
-public data class SecureVaultConfig(
+public data class SecureVaultConfig @JvmOverloads public constructor(
     public val namespace: String,
+    public val securityLevelPolicy: SecureVaultSecurityLevelPolicy =
+        SecureVaultSecurityLevelPolicy.ALLOW_SOFTWARE,
 ) {
     init {
         validate()

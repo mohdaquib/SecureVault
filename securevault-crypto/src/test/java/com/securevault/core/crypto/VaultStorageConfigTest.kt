@@ -1,6 +1,8 @@
 package com.securevault.core.crypto
 
 import com.securevault.sdk.InvalidSecureVaultConfigurationException
+import com.securevault.sdk.SecureVaultConfig
+import com.securevault.sdk.SecureVaultSecurityLevelPolicy
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -34,5 +36,15 @@ class VaultStorageConfigTest {
         assertEquals("securevault_db_key", legacy.keyAlias)
         assertEquals("securevault_crypto", legacy.preferencesName)
         assertEquals("securevault.db", legacy.databaseName)
+        assertEquals(SecureVaultSecurityLevelPolicy.ALLOW_SOFTWARE, legacy.securityLevelPolicy)
+    }
+
+    @Test fun carriesCustomerSecurityPolicyToKeyGeneration() {
+        val config = VaultStorageConfig(SecureVaultConfig(
+            namespace = "hardware-policy",
+            securityLevelPolicy = SecureVaultSecurityLevelPolicy.REQUIRE_STRONGBOX,
+        ))
+
+        assertEquals(SecureVaultSecurityLevelPolicy.REQUIRE_STRONGBOX, config.securityLevelPolicy)
     }
 }
